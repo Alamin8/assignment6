@@ -4,17 +4,14 @@ const galleryHeader = document.querySelector('.gallery-header');
 const searchBtn = document.getElementById('search-btn');
 const sliderBtn = document.getElementById('create-slider');
 const sliderContainer = document.getElementById('sliders');
+
 // selected image 
 let sliders = [];
-
-
-// If this key doesn't work
-// Find the name in the url and go to their website
-// to create your own api key
 const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
 // show images 
 const showImages = (images) => {
+  handleSpinner();
   imagesArea.style.display = 'block';
   gallery.innerHTML = '';
   // show gallery title
@@ -29,24 +26,31 @@ const showImages = (images) => {
 }
 
 const getImages = (query) => {
+  handleSpinner();
+  gallery.innerHTML = ' ';
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
     .then(data => showImages(data.hits))
-    .catch(err => console.log(err))
+    .catch(err => {
+      errorMassage.innerHTML = `<h3>Something wrong! Try again!</h3>`;
+      handleSpinner();
+    })
 }
 
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
-  element.classList.add('added');
- 
+
   let item = sliders.indexOf(img);
   if (item === -1) {
     sliders.push(img);
+    element.classList.toggle('added');
   } else {
-    alert('Hey, Already added !')
+    delete sliders[item];
+    element.classList.toggle('added');
   }
 }
+
 var timer
 const createSlider = () => {
   // check slider image length
@@ -54,33 +58,40 @@ const createSlider = () => {
     alert('Select at least 2 image.')
     return;
   }
-  // crate slider previous next area
-  sliderContainer.innerHTML = '';
-  const prevNext = document.createElement('div');
-  prevNext.className = "prev-next d-flex w-100 justify-content-between align-items-center";
-  prevNext.innerHTML = ` 
+
+  const duration = document.getElementById('duration').value || 1000;
+  if (duration > 0) {
+    // crate slider previous next area
+    sliderContainer.innerHTML = '';
+    const prevNext = document.createElement('div');
+    prevNext.className = "prev-next d-flex w-100 justify-content-between align-items-center";
+    prevNext.innerHTML = ` 
   <span class="prev" onclick="changeItem(-1)"><i class="fas fa-chevron-left"></i></span>
   <span class="next" onclick="changeItem(1)"><i class="fas fa-chevron-right"></i></span>
   `;
-
-  sliderContainer.appendChild(prevNext)
-  document.querySelector('.main').style.display = 'block';
-  // hide image aria
-  imagesArea.style.display = 'none';
-  const duration = document.getElementById('duration').value || 1000;
-  sliders.forEach(slide => {
-    let item = document.createElement('div')
-    item.className = "slider-item";
-    item.innerHTML = `<img class="w-100"
-    src="${slide}"
-    alt="">`;
-    sliderContainer.appendChild(item)
-  })
-  changeSlide(0)
-  timer = setInterval(function () {
-    slideIndex++;
-    changeSlide(slideIndex);
-  }, duration);
+    sliderContainer.appendChild(prevNext)
+    document.querySelector('.main').style.display = 'block';
+    // hide image aria
+    imagesArea.style.display = 'none';
+    if (duration > 0) {
+      sliders.forEach(slide => {
+        let item = document.createElement('div')
+        item.className = "slider-item";
+        item.innerHTML = `<img class="w-100"
+      src="${slide}"
+      alt="">`;
+        sliderContainer.appendChild(item)
+      })
+      changeSlide(0)
+      timer = setInterval(function () {
+        slideIndex++;
+        changeSlide(slideIndex);
+      }, duration);
+    }
+  } else {
+    errorLog()
+    document.querySelector('.main').style.display = 'none';
+  }
 }
 
 // change slider index 
@@ -116,7 +127,25 @@ searchBtn.addEventListener('click', function () {
   getImages(search.value)
   sliders.length = 0;
 })
+document.getElementById("search").addEventListener("keyup", function (event) {
+  if (event.key == "Enter") {
+    document.getElementById("search-btn").click();
+  }
+});
 
 sliderBtn.addEventListener('click', function () {
   createSlider()
 })
+
+
+// Extra work-1 Spinner
+const handleSpinner = () => {
+  const spinner = document.getElementById('spinner');
+  spinner.classList.toggle("d-none");
+}
+
+// Extra work-2 Error PopUp Window
+document.getElementById('closeWindow').style.display = 'none'
+const errorLog = () => {
+  document.getElementById('closeWindow').style.display = 'block'
+}

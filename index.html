@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Title</title>
+  <title>Assignment-6 by Alamin Mirdha</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -20,7 +20,7 @@
     <h4 class="mt-2 text-center">Search Image for create slider</h4>
     <div class="form-inline mt-3 d-flex justify-content-center">
       <div class="input-group col-md-6 mb-2">
-        <input type="text" class="form-control" id="search" placeholder="nature">
+        <input type="text" class="form-control" id="search" placeholder="Search Nature">
       </div>
       <button type="button" id="search-btn" class="btn btn-primary mb-2">Search</button>
     </div>
@@ -33,13 +33,11 @@
         <button id="create-slider" class="btn btn-primary px-5">Create slider</button>
       </div>
       <div class="row gallery">
-
       </div>
     </section>
     <!-- slider -->
     <div class="main">
       <section class="mt-5" id="sliders">
-
       </section>
       <div class="dots d-flex mt-2 w-100 justify-content-center align-items-center bg-light">
         <span class="dot" onclick="changeItem(-1)"></span>
@@ -48,7 +46,29 @@
     </div>
   </div>
   <!-- Optional JavaScript -->
+
+
+  <!-- Extra Work-1 Set Preload Spinner -->
+  <div id="spinner" class="d-none text-center">
+    <div class="spinner-border text-danger" role="status">
+      <span class="visually-hidden"></span>
+    </div>
+  </div>
+
+  <!-- Extra Work-2 Set Error PopUp Window -->
+  <div id="closeWindow" class="modal">
+    <form class="modal-content animate">
+      <div class="error-container">
+        <span onclick="document.getElementById('closeWindow').style.display='none'" class="close"
+          title="Close Modal">&times;</span>
+        <i class="fas fa-exclamation-circle"></i>
+        <p id="error-p"><span class="text-danger">Error</span><br>Duration value can not be 'Negative' or 'Zero'
+          <br>Change Duration Again!!!</p>
+      </div>
+    </form>
+  </div>
+
+
   <script src="./app.js"></script>
 </body>
-
 </html>
